@@ -1,10 +1,10 @@
 import { useForm } from 'react-hook-form'
-import { useProperties } from '../../hooks/useProperties'
 import type { Property } from '../../types'
 
 interface Props {
   property: Property
   onClose: () => void
+  onUpdate: (id: string, data: Partial<Omit<Property, 'id' | 'created_at' | 'updated_at'>>) => Promise<boolean>
 }
 
 const AMENITY_OPTIONS = ['Piscina', 'Gimnasio', 'Garaje', 'Jardín', 'Terraza', 'Seguridad 24h', 'Amoblado', 'Chimenea', 'Pet friendly']
@@ -26,8 +26,7 @@ type FormData = {
   amenities: string[]
 }
 
-export default function EditPropertyModal({ property, onClose }: Props) {
-  const { updateProperty } = useProperties()
+export default function EditPropertyModal({ property, onClose, onUpdate }: Props) {
   const { register, handleSubmit, watch, setValue, formState: { errors, isSubmitting } } = useForm<FormData>({
     defaultValues: {
       title: property.title,
@@ -59,7 +58,7 @@ export default function EditPropertyModal({ property, onClose }: Props) {
   }
 
   async function onSubmit(data: FormData) {
-    const ok = await updateProperty(property.id, {
+    const ok = await onUpdate(property.id, {
       ...data,
       price: Number(data.price),
       beds: Number(data.beds),

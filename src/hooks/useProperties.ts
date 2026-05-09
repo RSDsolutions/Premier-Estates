@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { supabase, isSupabaseConfigured } from '../lib/supabase'
 import { photoUrl, MOCK_PROPERTIES } from '../lib/mockData'
 import type { Property, SearchFilters } from '../types'
@@ -7,12 +7,13 @@ import toast from 'react-hot-toast'
 export function useProperties(isAdmin = false) {
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
+  const channelName = useRef(`properties_changes_${Math.random().toString(36).slice(2)}`).current
 
   useEffect(() => {
     loadProperties()
 
     if (isSupabaseConfigured()) {
-      const channel = supabase.channel('properties_changes')
+      const channel = supabase.channel(channelName)
         .on('postgres_changes', { event: '*', schema: 'public', table: 'properties' }, (payload) => {
           if (payload.eventType === 'UPDATE') {
             setProperties(prev => prev.map(p => p.id === payload.new.id ? { ...p, ...payload.new as Property } : p))

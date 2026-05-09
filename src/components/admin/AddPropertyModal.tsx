@@ -1,8 +1,10 @@
 import { useForm } from 'react-hook-form'
-import { useProperties } from '../../hooks/useProperties'
 import type { Property } from '../../types'
 
-interface Props { onClose: () => void }
+interface Props {
+  onClose: () => void
+  onCreate: (data: Omit<Property, 'id' | 'created_at' | 'updated_at'>) => Promise<Property | null>
+}
 
 const AMENITY_OPTIONS = ['Piscina', 'Gimnasio', 'Garaje', 'Jardín', 'Terraza', 'Seguridad 24h', 'Amoblado', 'Chimenea', 'Pet friendly']
 
@@ -23,8 +25,7 @@ type FormData = {
   amenities: string[]
 }
 
-export default function AddPropertyModal({ onClose }: Props) {
-  const { createProperty } = useProperties()
+export default function AddPropertyModal({ onClose, onCreate }: Props) {
   const { register, handleSubmit, watch, setValue, formState: { errors, isSubmitting } } = useForm<FormData>({
     defaultValues: {
       type: 'Casa',
@@ -63,7 +64,7 @@ export default function AddPropertyModal({ onClose }: Props) {
       year: Number(data.year),
       amenities: data.amenities ?? [],
     }
-    const result = await createProperty(payload)
+    const result = await onCreate(payload)
     if (result) onClose()
   }
 

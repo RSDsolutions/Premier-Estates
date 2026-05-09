@@ -21,7 +21,7 @@ const STATUS_CLASS: Record<string, string> = {
 
 export default function PropertiesTable() {
   const navigate = useNavigate()
-  const { properties, loading, deleteProperty, updateProperty } = useProperties(true)
+  const { properties, loading, createProperty, deleteProperty, updateProperty } = useProperties(true)
   const [search, setSearch] = useState('')
   const [filterStatus, setFilterStatus] = useState<string>('')
   const [modalOpen, setModalOpen] = useState(false)
@@ -142,8 +142,8 @@ export default function PropertiesTable() {
         </table>
       </div>
 
-      {modalOpen && <AddPropertyModal onClose={() => setModalOpen(false)} />}
-      {editTarget && <EditPropertyModal property={editTarget} onClose={() => setEditTarget(null)} />}
+      {modalOpen && <AddPropertyModal onClose={() => setModalOpen(false)} onCreate={createProperty} />}
+      {editTarget && <EditPropertyModal property={editTarget} onClose={() => setEditTarget(null)} onUpdate={updateProperty} />}
     </>
   )
 }
