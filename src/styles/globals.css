@@ -506,34 +506,163 @@ em{font-style:italic;color:var(--gold-l);font-family:var(--serif)}
   .sb-btn{grid-column:1/-1;margin:6px 6px 6px;padding:14px}
 }
 @media (max-width:720px){
-  .container{padding:0 20px}
+  /* Layout */
+  .container{padding:0 16px}
+  .nav-inner{padding:14px 16px;gap:16px}
+  .section{padding:48px 0}
+  .section-title{font-size:28px}
+  .section-head{margin-bottom:20px}
+  .page-title{font-size:28px}
+
+  /* Navbar / hamburger */
   .nav-links,.publish-btn{display:none}
   .hamburger{display:flex}
-  .nav-links.open{display:flex;position:absolute;top:100%;left:0;right:0;background:var(--bg-2);border-bottom:1px solid var(--border);flex-direction:column;padding:14px;gap:0}
-  .grid-cards,.ai-strip{grid-template-columns:1fr}
-  .stats-bar{grid-template-columns:1fr;gap:14px}
+  .nav-links.open{
+    display:flex;position:absolute;top:100%;left:0;right:0;
+    background:rgba(13,13,13,.97);border-bottom:1px solid var(--border);
+    flex-direction:column;padding:10px 8px;gap:2px;z-index:59;
+    backdrop-filter:blur(14px)
+  }
+  .nav-links.open .nav-link{padding:13px 16px;font-size:15px;border-radius:8px;width:100%}
+  .nav-actions{gap:6px}
+  .nav-actions .btn-outline{padding:9px 12px;font-size:13px}
+  .nav-actions .icon-btn{width:38px;height:38px}
+
+  /* Hero */
+  .hero{min-height:480px;padding:72px 0 40px}
+  .hero-inner{padding:0 16px}
+  .hero-sub{font-size:15px;margin-bottom:24px;max-width:100%}
+
+  /* Search bar – single column stack */
+  .search-bar{grid-template-columns:1fr}
+  .sb-field:first-child{border-radius:10px 10px 0 0;border-bottom-left-radius:0}
+  .sb-btn{grid-column:1;border-radius:0 0 10px 10px;margin:0;padding:15px}
+
+  /* Stats */
+  .stats-bar{grid-template-columns:1fr;gap:14px;padding:24px 16px;margin-top:-20px}
   .stat-divider{display:none}
-  .hero{min-height:560px}
-  .section{padding:56px 0}
-  .section-title{font-size:32px}
+  .stat-num{font-size:40px}
+
+  /* Property cards */
+  .grid-cards,.ai-strip{grid-template-columns:1fr}
+
+  /* Listings page */
+  .listings-layout{padding:20px 16px;gap:20px}
+  .results-head{flex-direction:column;align-items:flex-start;gap:12px}
+  .results-tools{width:100%}
+  .results-tools .select{flex:1}
+
+  /* Property detail */
   .d-title{font-size:28px}
   .spec-grid{grid-template-columns:repeat(2,1fr)}
+
+  /* Admin shell – horizontal nav bar */
+  .admin-shell{grid-template-columns:1fr}
+  .admin-side{
+    position:sticky;top:62px;z-index:50;
+    height:auto;flex-direction:row;overflow-x:auto;
+    padding:8px 12px;gap:4px;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none
+  }
+  .admin-side::-webkit-scrollbar{display:none}
+  .admin-nav{flex-direction:row;gap:4px}
+  .admin-brand,.admin-user{display:none}
+  .anav{padding:10px 16px;flex:none;border-radius:8px;white-space:nowrap}
+  .anav span{display:inline !important}
+  .admin-main{padding:20px 16px}
+  .apanel-head{flex-direction:column;align-items:flex-start;gap:12px}
+  .apanel-tools{flex-wrap:wrap;width:100%;gap:8px}
+  .apanel-tools .btn{flex:none}
+  .search-input{min-width:0;flex:1}
+
+  /* Table – horizontal scroll on mobile */
+  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .data-table{min-width:580px}
+
+  /* KPI grid */
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+
+  /* Modals – bottom sheet style on mobile */
+  .modal{padding:0;align-items:flex-end}
+  .modal-overlay{backdrop-filter:blur(4px)}
+  .modal-card{
+    max-width:100%;width:100%;
+    border-radius:20px 20px 0 0;
+    padding:24px 20px;
+    max-height:92vh;
+    border-bottom:0
+  }
   .modal-body{grid-template-columns:1fr}
-  .trust-grid{grid-template-columns:1fr 1fr}
-  .footer-inner{grid-template-columns:1fr}
-  .results-tools{width:100%}.results-tools .select{flex:1}
+  .modal-foot{padding-top:14px}
+  .modal-close{top:14px;right:14px}
+
+  /* Profile */
   .profile-head{grid-template-columns:auto 1fr;text-align:left}
   .profile-head .btn{grid-column:1/-1}
+
+  /* List view cards */
   .list-view .prop-card{flex-direction:column}
   .list-view .pc-photo{width:100%}
   .list-view .pc-cta{border-left:0;border-top:1px solid var(--border-2)}
-  .admin-shell{grid-template-columns:1fr}
-  .admin-side{position:relative;top:0;height:auto;flex-direction:row;overflow-x:auto}
-  .admin-nav{flex-direction:row}
-  .admin-brand,.admin-user{display:none}
-  .anav{padding:10px 14px}
-  .chat-panel{width:calc(100vw - 32px);right:16px}
+
+  /* Footer */
+  .footer-inner{grid-template-columns:1fr}
+  .footer-bottom{flex-direction:column;align-items:center;gap:8px;text-align:center}
+  .trust-grid{grid-template-columns:1fr 1fr}
+
+  /* Chat */
+  .chat-panel{width:calc(100vw - 24px);right:12px;bottom:84px}
   .chat-fab{bottom:16px;right:16px}
+}
+@media (max-width:480px){
+  .container{padding:0 12px}
+  .nav-inner{padding:12px}
+  .nav-actions .btn-outline{display:none}
+  .hamburger{width:40px;height:40px}
+
+  /* Hero */
+  .hero{min-height:420px;padding:60px 0 32px}
+  .hero-title{font-size:clamp(30px,9vw,44px) !important}
+  .hero-sub{font-size:14px}
+
+  /* Typography */
+  .section{padding:36px 0}
+  .section-title{font-size:24px}
+  .page-title{font-size:24px}
+  .sub-title{font-size:18px;margin:20px 0 10px}
+
+  /* Stats */
+  .stats-bar{padding:18px 12px;gap:10px}
+  .stat-num{font-size:34px}
+
+  /* Admin */
+  .admin-main{padding:14px 12px}
+  .apanel-head .section-title{font-size:18px}
+  .apanel-tools .btn{padding:10px 14px;font-size:13px}
+  .kpi-grid{grid-template-columns:1fr 1fr}
+  .kpi{padding:16px}
+  .kpi-num{font-size:26px}
+  .data-table{min-width:520px}
+
+  /* Cards */
+  .pc-title{font-size:18px}
+  .pc-price{font-size:20px}
+  .pc-body{padding:14px 14px 16px}
+
+  /* Modals */
+  .modal-card{padding:18px 14px;max-height:96vh}
+  .modal-card h2{font-size:22px}
+
+  /* Misc */
+  .trust-grid{grid-template-columns:1fr}
+  .spec-grid{grid-template-columns:repeat(2,1fr)}
+  .slot-grid{grid-template-columns:repeat(3,1fr)}
+  .tab{padding:10px 12px;font-size:13px}
+  .footer{padding:40px 0 18px}
+  .btn{padding:10px 18px;font-size:13px}
+  .btn-primary{padding:11px 20px}
+  .search-bar{border-radius:10px}
 }
 
 /* ── Google Maps custom pins ─────────────────────────────────────────── */
