@@ -38,3 +38,6 @@ supabase/.temp
 
 # TypeScript
 *.tsbuildinfo
+
+# MCP config (contiene tokens privados)
+.mcp.json

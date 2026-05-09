@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase, isSupabaseConfigured } from '../lib/supabase'
-import { photoUrl } from '../lib/mockData'
+import { photoUrl, MOCK_PROPERTIES } from '../lib/mockData'
 import type { Property, SearchFilters } from '../types'
 import toast from 'react-hot-toast'
 
-export function useProperties() {
+export function useProperties(isAdmin = false) {
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -17,9 +17,7 @@ export function useProperties() {
           if (payload.eventType === 'UPDATE') {
             setProperties(prev => prev.map(p => p.id === payload.new.id ? { ...p, ...payload.new as Property } : p))
           } else if (payload.eventType === 'INSERT') {
-            if (payload.new.status === 'active') {
-              setProperties(prev => [payload.new as Property, ...prev])
-            }
+            setProperties(prev => [payload.new as Property, ...prev])
           } else if (payload.eventType === 'DELETE') {
             setProperties(prev => prev.filter(p => p.id !== payload.old?.id))
           }
@@ -27,21 +25,21 @@ export function useProperties() {
 
       return () => { supabase.removeChannel(channel) }
     }
-  }, [])
+  }, [isAdmin])
 
   async function loadProperties() {
     setLoading(true)
     if (!isSupabaseConfigured()) {
-      setProperties([])
+      const mock = isAdmin ? MOCK_PROPERTIES : MOCK_PROPERTIES.filter(p => p.status !== 'inactive')
+      setProperties(mock)
       setLoading(false)
       return
     }
-    const { data, error } = await supabase
-      .from('properties')
-      .select('*')
-      .eq('status', 'active')
-      .order('created_at', { ascending: false })
-
+    let query = supabase.from('properties').select('*').order('created_at', { ascending: false })
+    if (!isAdmin) {
+      query = query.eq('status', 'active')
+    }
+    const { data, error } = await query
     if (error) {
       console.error('Error fetching properties', error)
       toast.error('Error al cargar propiedades')
@@ -89,7 +87,11 @@ export function useProperties() {
       .insert(data)
       .select()
       .single()
-    if (error) { toast.error('Error al crear propiedad'); return null }
+    if (error) {
+      console.error('Error creating property', error)
+      toast.error('Error al crear propiedad')
+      return null
+    }
     setProperties(prev => [created as Property, ...prev])
     toast.success('Propiedad publicada')
     return created as Property
@@ -99,25 +101,35 @@ export function useProperties() {
     if (!isSupabaseConfigured()) {
       setProperties(prev => prev.map(p => p.id === id ? { ...p, ...data } : p))
       toast.success('Propiedad actualizada')
-      return
+      return true
     }
     const { error } = await supabase.from('properties').update(data).eq('id', id)
-    if (error) { toast.error('Error al actualizar'); return }
+    if (error) {
+      console.error('Error updating property', error)
+      toast.error('Error al actualizar')
+      return false
+    }
     setProperties(prev => prev.map(p => p.id === id ? { ...p, ...data } : p))
     toast.success('Propiedad actualizada')
+    return true
   }, [])
 
   const deleteProperty = useCallback(async (id: string) => {
-    if (!confirm('¿Eliminar esta propiedad?')) return
+    if (!confirm('¿Eliminar esta propiedad? Esta acción no se puede deshacer.')) return false
     if (!isSupabaseConfigured()) {
       setProperties(prev => prev.filter(p => p.id !== id))
       toast.success('Propiedad eliminada')
-      return
+      return true
     }
     const { error } = await supabase.from('properties').delete().eq('id', id)
-    if (error) { toast.error('Error al eliminar'); return }
+    if (error) {
+      console.error('Error deleting property', error)
+      toast.error('Error al eliminar')
+      return false
+    }
     setProperties(prev => prev.filter(p => p.id !== id))
     toast.success('Propiedad eliminada')
+    return true
   }, [])
 
   return { properties, loading, getProperty, filterProperties, createProperty, updateProperty, deleteProperty, photoUrl, reload: loadProperties }

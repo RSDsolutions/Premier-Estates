@@ -1,9 +1,10 @@
-import { useEffect, lazy, Suspense } from 'react'
+import { useEffect, useState, useRef, lazy, Suspense } from 'react'
 import { createBrowserRouter, RouterProvider, Outlet, ScrollRestoration } from 'react-router-dom'
 import Header from './components/layout/Header'
 import Footer from './components/layout/Footer'
 import AuthModal from './components/auth/AuthModal'
 import ChatWidget from './components/chat/ChatWidget'
+import SplashScreen from './components/ui/SplashScreen'
 import { supabase, isSupabaseConfigured } from './lib/supabase'
 import { useAppStore } from './store'
 
@@ -66,19 +67,31 @@ const router = createBrowserRouter([
 
 export default function App() {
   const { setUser, setProfile } = useAppStore()
+  const [splash, setSplash] = useState<'app' | 'login' | null>('app')
+  const prevUserRef = useRef<string | null | undefined>(undefined)
 
   useEffect(() => {
     if (!isSupabaseConfigured()) return
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null)
+      prevUserRef.current = session?.user?.id ?? null
       if (session?.user) fetchProfile(session.user.id)
     })
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null)
-      if (session?.user) fetchProfile(session.user.id)
-      else setProfile(null)
+      if (session?.user) {
+        fetchProfile(session.user.id)
+        // Show login splash only when a new sign-in happens (not on page reload)
+        if (event === 'SIGNED_IN' && prevUserRef.current === null) {
+          setSplash('login')
+        }
+        prevUserRef.current = session.user.id
+      } else {
+        setProfile(null)
+        prevUserRef.current = null
+      }
     })
 
     return () => subscription.unsubscribe()
@@ -93,5 +106,12 @@ export default function App() {
     if (data) setProfile(data)
   }
 
-  return <RouterProvider router={router} />
+  return (
+    <>
+      {splash && (
+        <SplashScreen mode={splash} onDone={() => setSplash(null)} />
+      )}
+      <RouterProvider router={router} />
+    </>
+  )
 }
