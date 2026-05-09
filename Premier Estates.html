@@ -1,0 +1,892 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Premier Estates — Encuentra tu propiedad ideal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<!-- ============================================================ HEADER ============================================================ -->
+<header class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a class="brand" data-nav="home" href="#">
+      <span class="brand-mark"><i class="fa-solid fa-gem"></i></span>
+      <span class="brand-name">Premier <em>Estates</em></span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a class="nav-link active" data-nav="home" href="#">Inicio</a>
+      <a class="nav-link" data-nav="listings" href="#">Propiedades</a>
+      <a class="nav-link" data-nav="about" href="#">Nosotros</a>
+      <a class="nav-link" data-nav="contact" href="#">Contacto</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn nav-icon" data-nav="profile" title="Mi perfil"><i class="fa-regular fa-user"></i></button>
+      <button class="icon-btn nav-icon notif-btn" data-nav="admin" title="Admin">
+        <i class="fa-regular fa-bell"></i>
+        <span class="notif-dot"></span>
+      </button>
+      <button class="btn btn-primary publish-btn" data-nav="admin"><i class="fa-solid fa-plus"></i> Publicar propiedad</button>
+      <button class="hamburger" id="hamburger" aria-label="Menú"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================ MAIN ============================================================ -->
+<main id="app">
+
+  <!-- ===== HOME ===== -->
+  <section class="view view-home active" data-view="home" data-screen-label="01 Home">
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-bg" style="background-image:url('https://picsum.photos/seed/premier-hero/1800/1000')"></div>
+      <div class="hero-overlay"></div>
+      <div class="hero-inner">
+        <span class="eyebrow gold">Bienvenido a Premier Estates</span>
+        <h1 class="hero-title">Encuentra la propiedad <em>de tus sueños</em></h1>
+        <p class="hero-sub">Miles de propiedades exclusivas en las mejores zonas. Curadas con un estándar de lujo.</p>
+
+        <form class="search-bar" id="searchBar" onsubmit="event.preventDefault(); App.runSearch();">
+          <div class="sb-field">
+            <label>Tipo</label>
+            <select id="sb-type">
+              <option value="">Todos</option>
+              <option>Casa</option>
+              <option>Departamento</option>
+              <option>Oficina</option>
+              <option>Local</option>
+            </select>
+          </div>
+          <div class="sb-field">
+            <label>Zona</label>
+            <select id="sb-zone">
+              <option value="">Todas las zonas</option>
+              <option>Cumbayá</option>
+              <option>Quito Norte</option>
+              <option>Valle de los Chillos</option>
+              <option>La Carolina</option>
+              <option>González Suárez</option>
+              <option>Tumbaco</option>
+            </select>
+          </div>
+          <div class="sb-field">
+            <label>Precio máx.</label>
+            <input id="sb-price" type="number" placeholder="$ 500.000" min="0" step="1000" />
+          </div>
+          <div class="sb-field">
+            <label>Operación</label>
+            <select id="sb-op">
+              <option value="">Cualquiera</option>
+              <option>Venta</option>
+              <option>Arriendo</option>
+            </select>
+          </div>
+          <button class="btn btn-primary sb-btn" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <section class="stats-bar container">
+      <div class="stat">
+        <div class="stat-num"><span data-count="1200">0</span><span class="gold">+</span></div>
+        <div class="stat-label">Propiedades</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <div class="stat-num"><span data-count="850">0</span><span class="gold">+</span></div>
+        <div class="stat-label">Clientes satisfechos</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <div class="stat-num"><span data-count="12">0</span></div>
+        <div class="stat-label">Años de experiencia</div>
+      </div>
+    </section>
+
+    <!-- FEATURED -->
+    <section class="container section">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow gold">Selección curada</span>
+          <h2 class="section-title">Propiedades <em>destacadas</em></h2>
+        </div>
+        <a class="link-gold" href="#" data-nav="listings">Ver todas <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+      <div class="grid-cards" id="featuredGrid"></div>
+    </section>
+
+    <!-- MAP -->
+    <section class="container section">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow gold">Mapa interactivo</span>
+          <h2 class="section-title">Propiedades <em>por zona</em></h2>
+        </div>
+      </div>
+      <div class="map-card">
+        <div class="map" id="mapCanvas">
+          <!-- pins injected -->
+        </div>
+        <div class="zone-pills">
+          <button class="pill active" data-zone="">Todas</button>
+          <button class="pill" data-zone="Quito Norte">Quito Norte</button>
+          <button class="pill" data-zone="Sur">Sur</button>
+          <button class="pill" data-zone="Centro">Centro</button>
+          <button class="pill" data-zone="Cumbayá">Cumbayá</button>
+          <button class="pill" data-zone="Valles">Valles</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Recommendations -->
+    <section class="container section">
+      <div class="ai-banner">
+        <div class="ai-head">
+          <div class="ai-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+          <div>
+            <span class="eyebrow gold">Recomendado para ti</span>
+            <h3>Basado en búsquedas recientes, estas propiedades podrían interesarte</h3>
+          </div>
+          <button class="btn btn-ghost ai-refresh"><i class="fa-solid fa-rotate"></i> Actualizar</button>
+        </div>
+        <div class="ai-strip" id="aiStrip"></div>
+      </div>
+    </section>
+  </section>
+
+  <!-- ===== LISTINGS ===== -->
+  <section class="view" data-view="listings" data-screen-label="02 Listings">
+    <div class="container listings-layout">
+      <aside class="filters-side">
+        <div class="filters-head">
+          <h3>Filtros</h3>
+          <button class="link-gold-sm" id="resetFilters">Reiniciar</button>
+        </div>
+
+        <div class="filter-block">
+          <label class="filter-label">Tipo</label>
+          <div class="chip-group" data-filter="type">
+            <button class="chip active" data-val="">Todos</button>
+            <button class="chip" data-val="Casa">Casa</button>
+            <button class="chip" data-val="Departamento">Depto</button>
+            <button class="chip" data-val="Oficina">Oficina</button>
+            <button class="chip" data-val="Local">Local</button>
+          </div>
+        </div>
+
+        <div class="filter-block">
+          <label class="filter-label">Zona</label>
+          <select class="select" id="f-zone">
+            <option value="">Todas las zonas</option>
+            <option>Cumbayá</option><option>Quito Norte</option>
+            <option>Valle de los Chillos</option><option>La Carolina</option>
+            <option>González Suárez</option><option>Tumbaco</option>
+          </select>
+        </div>
+
+        <div class="filter-block">
+          <label class="filter-label">Precio</label>
+          <div class="range-row"><span id="rmin">$ 50.000</span><span id="rmax">$ 500.000</span></div>
+          <div class="range">
+            <input type="range" id="rangeMin" min="50000" max="500000" step="5000" value="50000">
+            <input type="range" id="rangeMax" min="50000" max="500000" step="5000" value="500000">
+          </div>
+        </div>
+
+        <div class="filter-block">
+          <label class="filter-label">Habitaciones</label>
+          <div class="chip-group" data-filter="beds">
+            <button class="chip active" data-val="">Cualquiera</button>
+            <button class="chip" data-val="1">1+</button>
+            <button class="chip" data-val="2">2+</button>
+            <button class="chip" data-val="3">3+</button>
+            <button class="chip" data-val="4">4+</button>
+          </div>
+        </div>
+
+        <div class="filter-block">
+          <label class="filter-label">Baños</label>
+          <div class="chip-group" data-filter="baths">
+            <button class="chip active" data-val="">Cualquiera</button>
+            <button class="chip" data-val="1">1+</button>
+            <button class="chip" data-val="2">2+</button>
+            <button class="chip" data-val="3">3+</button>
+          </div>
+        </div>
+
+        <div class="filter-block">
+          <label class="filter-label">m² mínimos</label>
+          <input type="number" class="input" id="f-area" placeholder="0" min="0">
+        </div>
+
+        <div class="filter-block">
+          <label class="filter-label">Características</label>
+          <label class="check"><input type="checkbox" data-feat="Piscina"><span>Piscina</span></label>
+          <label class="check"><input type="checkbox" data-feat="Garaje"><span>Garaje</span></label>
+          <label class="check"><input type="checkbox" data-feat="Jardín"><span>Jardín</span></label>
+          <label class="check"><input type="checkbox" data-feat="Seguridad 24h"><span>Seguridad 24h</span></label>
+        </div>
+      </aside>
+
+      <section class="listings-main">
+        <div class="results-head">
+          <div>
+            <h2 class="section-title sm"><span id="resultCount">124</span> propiedades encontradas</h2>
+            <p class="muted">Mostrando los mejores resultados según tus filtros</p>
+          </div>
+          <div class="results-tools">
+            <div class="view-toggle">
+              <button class="vt active" data-view-mode="grid" title="Grid"><i class="fa-solid fa-grip"></i></button>
+              <button class="vt" data-view-mode="list" title="Lista"><i class="fa-solid fa-list"></i></button>
+            </div>
+            <select class="select" id="sortSel">
+              <option value="recent">Más recientes</option>
+              <option value="asc">Precio: menor a mayor</option>
+              <option value="desc">Precio: mayor a menor</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid-cards" id="listingsGrid"></div>
+
+        <div class="pagination">
+          <button class="page-btn"><i class="fa-solid fa-chevron-left"></i></button>
+          <button class="page-btn active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">3</button>
+          <span class="page-dots">…</span>
+          <button class="page-btn">14</button>
+          <button class="page-btn"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <!-- ===== DETAIL ===== -->
+  <section class="view" data-view="detail" data-screen-label="03 Detail">
+    <div class="container">
+      <a class="back-link" data-nav="listings" href="#"><i class="fa-solid fa-arrow-left"></i> Volver a propiedades</a>
+      <div class="detail-layout">
+        <div class="detail-main">
+          <div class="gallery">
+            <button class="fav-btn" id="favTopBtn"><i class="fa-regular fa-heart"></i></button>
+            <button class="gal-arrow left" id="galPrev"><i class="fa-solid fa-chevron-left"></i></button>
+            <button class="gal-arrow right" id="galNext"><i class="fa-solid fa-chevron-right"></i></button>
+            <div class="gal-main" id="galMain"></div>
+            <div class="gal-counter" id="galCounter">1 / 5</div>
+          </div>
+          <div class="thumb-strip" id="thumbStrip"></div>
+
+          <div class="detail-body">
+            <div class="d-head">
+              <div>
+                <span class="zone-badge"><i class="fa-solid fa-location-dot"></i> <span id="d-zone">Cumbayá</span></span>
+                <h1 class="d-title" id="d-title">Casa moderna con vista panorámica</h1>
+              </div>
+              <div class="d-price-block">
+                <div class="d-price gold" id="d-price">$ 285.000</div>
+                <div class="d-op" id="d-op">Venta</div>
+              </div>
+            </div>
+
+            <div class="spec-grid">
+              <div class="spec"><i class="fa-solid fa-bed"></i><span class="spec-num" id="d-beds">4</span><span class="spec-lbl">Habitaciones</span></div>
+              <div class="spec"><i class="fa-solid fa-bath"></i><span class="spec-num" id="d-baths">3</span><span class="spec-lbl">Baños</span></div>
+              <div class="spec"><i class="fa-solid fa-vector-square"></i><span class="spec-num" id="d-area">280</span><span class="spec-lbl">m² construidos</span></div>
+              <div class="spec"><i class="fa-solid fa-layer-group"></i><span class="spec-num" id="d-floor">2</span><span class="spec-lbl">Plantas</span></div>
+              <div class="spec"><i class="fa-solid fa-car"></i><span class="spec-num" id="d-garage">2</span><span class="spec-lbl">Garaje</span></div>
+              <div class="spec"><i class="fa-solid fa-calendar"></i><span class="spec-num" id="d-year">2021</span><span class="spec-lbl">Año</span></div>
+            </div>
+
+            <h3 class="sub-title">Descripción</h3>
+            <div class="d-desc" id="d-desc">
+              <p>Espectacular residencia de diseño contemporáneo emplazada en una de las zonas más exclusivas del valle. Acabados de primer nivel, luz natural en cada ambiente y una integración perfecta entre el espacio interior y el jardín privado.</p>
+              <p>La planta baja ofrece un gran salón con doble altura, cocina equipada estilo italiano, comedor formal y sala familiar abierta a la terraza con piscina climatizada. La planta alta alberga la suite principal con vestidor y baño en mármol, además de tres habitaciones secundarias y zona de estudio.</p>
+              <p>Conjunto privado con seguridad 24h, áreas verdes comunes, BBQ y acceso controlado. A 5 minutos del Paseo San Francisco y los mejores colegios internacionales.</p>
+            </div>
+
+            <h3 class="sub-title">Comodidades</h3>
+            <div class="amenities" id="d-amenities">
+              <span class="amen"><i class="fa-solid fa-water-ladder"></i> Piscina</span>
+              <span class="amen"><i class="fa-solid fa-shield-halved"></i> Seguridad 24h</span>
+              <span class="amen"><i class="fa-solid fa-dumbbell"></i> Gimnasio</span>
+              <span class="amen"><i class="fa-solid fa-tree"></i> Jardín</span>
+              <span class="amen"><i class="fa-solid fa-mountain-sun"></i> Terraza</span>
+              <span class="amen"><i class="fa-solid fa-fire"></i> Chimenea</span>
+            </div>
+
+            <h3 class="sub-title">Ubicación</h3>
+            <div class="mini-map">
+              <div class="mini-map-grid"></div>
+              <div class="mini-pin"><i class="fa-solid fa-location-dot"></i></div>
+              <div class="mini-map-label" id="d-loclabel">Cumbayá, Quito</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="detail-aside">
+          <div class="agent-card">
+            <div class="agent-head">
+              <img src="https://picsum.photos/seed/agent-carlos/120/120" alt="Carlos Mendoza" />
+              <div>
+                <span class="eyebrow gold">Asesor inmobiliario</span>
+                <div class="agent-name">Carlos Mendoza</div>
+                <div class="agent-rating"><i class="fa-solid fa-star"></i> 4.9 <span class="muted">(127 reseñas)</span></div>
+              </div>
+            </div>
+            <div class="agent-contact">
+              <a href="#" class="contact-row"><i class="fa-solid fa-phone"></i> +593 99 234 5678</a>
+              <a href="#" class="contact-row"><i class="fa-solid fa-envelope"></i> c.mendoza@premier.ec</a>
+            </div>
+            <button class="btn btn-primary block" onclick="App.openVisitModal()"><i class="fa-regular fa-calendar"></i> Agendar visita</button>
+            <button class="btn btn-whatsapp block"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
+            <button class="btn btn-outline block"><i class="fa-regular fa-envelope"></i> Enviar correo</button>
+            <div class="trust-row">
+              <span><i class="fa-solid fa-shield-halved gold"></i> Verificado</span>
+              <span><i class="fa-solid fa-clock gold"></i> Responde en 1h</span>
+            </div>
+          </div>
+
+          <div class="quick-fact">
+            <div class="qf-row"><span class="muted">Código</span><strong id="d-code">PE-1042</strong></div>
+            <div class="qf-row"><span class="muted">Publicado</span><strong>hace 4 días</strong></div>
+            <div class="qf-row"><span class="muted">Visitas</span><strong>1.284</strong></div>
+          </div>
+        </aside>
+      </div>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow gold">Otras opciones</span>
+            <h2 class="section-title">Propiedades <em>similares</em></h2>
+          </div>
+        </div>
+        <div class="grid-cards" id="similarGrid"></div>
+      </section>
+    </div>
+  </section>
+
+  <!-- ===== ADMIN ===== -->
+  <section class="view view-admin" data-view="admin" data-screen-label="04 Admin">
+    <div class="admin-shell">
+      <aside class="admin-side">
+        <div class="admin-brand">
+          <span class="brand-mark sm"><i class="fa-solid fa-gem"></i></span>
+          <span>Admin</span>
+        </div>
+        <nav class="admin-nav">
+          <a class="anav active" data-admin="dashboard"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+          <a class="anav" data-admin="props"><i class="fa-solid fa-house-chimney"></i> Propiedades</a>
+          <a class="anav" data-admin="visitas"><i class="fa-regular fa-calendar"></i> Visitas</a>
+          <a class="anav" data-admin="clientes"><i class="fa-regular fa-user"></i> Clientes</a>
+          <a class="anav" data-admin="pagos"><i class="fa-regular fa-credit-card"></i> Pagos</a>
+          <a class="anav" data-admin="notif"><i class="fa-regular fa-bell"></i> Notificaciones <span class="badge-num">3</span></a>
+          <a class="anav" data-admin="config"><i class="fa-solid fa-gear"></i> Configuración</a>
+        </nav>
+        <div class="admin-user">
+          <img src="https://picsum.photos/seed/admin-avatar/64/64">
+          <div>
+            <div class="au-name">Admin · M. González</div>
+            <div class="au-mail muted">admin@premier.ec</div>
+          </div>
+        </div>
+      </aside>
+
+      <section class="admin-main">
+
+        <!-- DASHBOARD -->
+        <div class="apanel active" data-apanel="dashboard">
+          <header class="apanel-head">
+            <div>
+              <h2 class="section-title sm">Dashboard</h2>
+              <p class="muted">Resumen ejecutivo · Mayo 2026</p>
+            </div>
+            <div class="apanel-tools">
+              <button class="btn btn-ghost"><i class="fa-solid fa-download"></i> Exportar</button>
+              <button class="btn btn-primary" data-nav="payment"><i class="fa-solid fa-bolt"></i> Boost listing</button>
+            </div>
+          </header>
+
+          <div class="kpi-grid">
+            <div class="kpi"><div class="kpi-icn"><i class="fa-solid fa-house-chimney"></i></div><div class="kpi-num">124</div><div class="kpi-lbl">Propiedades activas</div><div class="kpi-delta up">+8 este mes</div></div>
+            <div class="kpi"><div class="kpi-icn"><i class="fa-regular fa-calendar"></i></div><div class="kpi-num">38</div><div class="kpi-lbl">Visitas agendadas</div><div class="kpi-delta up">+12% vs sem. ant.</div></div>
+            <div class="kpi"><div class="kpi-icn"><i class="fa-regular fa-comments"></i></div><div class="kpi-num">17</div><div class="kpi-lbl">Consultas nuevas</div><div class="kpi-delta down">−3 vs ayer</div></div>
+            <div class="kpi"><div class="kpi-icn"><i class="fa-solid fa-dollar-sign"></i></div><div class="kpi-num">$ 4.800</div><div class="kpi-lbl">Ingresos del mes</div><div class="kpi-delta up">+22%</div></div>
+          </div>
+
+          <div class="dash-row">
+            <div class="card chart-card">
+              <div class="card-head">
+                <div>
+                  <h3>Visitas — últimos 7 días</h3>
+                  <p class="muted">Total: 217 · Promedio diario: 31</p>
+                </div>
+                <div class="legend"><span class="dot gold"></span> Visitas <span class="dot mute"></span> Consultas</div>
+              </div>
+              <svg class="chart" viewBox="0 0 600 220" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="ggrad" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stop-color="#C9A84C" stop-opacity="0.45"/>
+                    <stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <g class="grid-lines">
+                  <line x1="0" x2="600" y1="40" y2="40"/><line x1="0" x2="600" y1="90" y2="90"/>
+                  <line x1="0" x2="600" y1="140" y2="140"/><line x1="0" x2="600" y1="190" y2="190"/>
+                </g>
+                <path d="M30,150 L120,110 L210,135 L300,80 L390,95 L480,55 L570,70 L570,200 L30,200 Z" fill="url(#ggrad)"/>
+                <path d="M30,150 L120,110 L210,135 L300,80 L390,95 L480,55 L570,70" fill="none" stroke="#C9A84C" stroke-width="2.5"/>
+                <path d="M30,180 L120,170 L210,175 L300,160 L390,165 L480,150 L570,158" fill="none" stroke="#555" stroke-width="2" stroke-dasharray="4 4"/>
+                <g class="dots">
+                  <circle cx="30" cy="150" r="4" fill="#C9A84C"/><circle cx="120" cy="110" r="4" fill="#C9A84C"/>
+                  <circle cx="210" cy="135" r="4" fill="#C9A84C"/><circle cx="300" cy="80" r="4" fill="#C9A84C"/>
+                  <circle cx="390" cy="95" r="4" fill="#C9A84C"/><circle cx="480" cy="55" r="4" fill="#C9A84C"/>
+                  <circle cx="570" cy="70" r="4" fill="#C9A84C"/>
+                </g>
+                <g class="axis-labels">
+                  <text x="30" y="215">Lun</text><text x="120" y="215">Mar</text><text x="210" y="215">Mié</text>
+                  <text x="300" y="215">Jue</text><text x="390" y="215">Vie</text><text x="480" y="215">Sáb</text>
+                  <text x="570" y="215">Dom</text>
+                </g>
+              </svg>
+            </div>
+
+            <div class="card activity-card">
+              <div class="card-head"><h3>Actividad reciente</h3><a class="link-gold-sm">Ver todo</a></div>
+              <ul class="activity">
+                <li><span class="ac-dot gold"></span><div><strong>María L.</strong> agendó una visita para <em>Casa Cumbayá Hills</em><br><span class="muted">hace 12 min</span></div></li>
+                <li><span class="ac-dot"></span><div><strong>Andrés P.</strong> envió consulta sobre <em>Depto González Suárez</em><br><span class="muted">hace 38 min</span></div></li>
+                <li><span class="ac-dot gold"></span><div>Pago confirmado · <strong>$ 1.200</strong> · Listado destacado<br><span class="muted">hace 1 h</span></div></li>
+                <li><span class="ac-dot"></span><div><strong>Lucía R.</strong> firmó contrato de arriendo<br><span class="muted">hace 3 h</span></div></li>
+                <li><span class="ac-dot"></span><div>Nueva propiedad publicada · <em>Oficina La Carolina</em><br><span class="muted">hoy 09:14</span></div></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROPS -->
+        <div class="apanel" data-apanel="props">
+          <header class="apanel-head">
+            <div>
+              <h2 class="section-title sm">Propiedades</h2>
+              <p class="muted"><span id="propsCount">12</span> registros</p>
+            </div>
+            <div class="apanel-tools">
+              <div class="search-input"><i class="fa-solid fa-magnifying-glass"></i><input placeholder="Buscar…" id="adminPropSearch"></div>
+              <button class="btn btn-primary" onclick="App.addPropertyRow()"><i class="fa-solid fa-plus"></i> Agregar propiedad</button>
+            </div>
+          </header>
+          <div class="table-wrap">
+            <table class="data-table" id="propsTable">
+              <thead>
+                <tr>
+                  <th>Foto</th><th>Título</th><th>Zona</th><th>Precio</th><th>Tipo</th><th>Estado</th><th class="ta-r">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="propsBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- VISITAS -->
+        <div class="apanel" data-apanel="visitas">
+          <header class="apanel-head">
+            <div>
+              <h2 class="section-title sm">Visitas</h2>
+              <p class="muted">Próximas 14 días</p>
+            </div>
+            <div class="apanel-tools">
+              <button class="btn btn-ghost"><i class="fa-regular fa-calendar"></i> Calendario</button>
+              <button class="btn btn-primary"><i class="fa-solid fa-plus"></i> Nueva visita</button>
+            </div>
+          </header>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Cliente</th><th>Propiedad</th><th>Fecha</th><th>Hora</th><th>Estado</th><th class="ta-r">Acciones</th></tr></thead>
+              <tbody id="visitasBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- CLIENTES -->
+        <div class="apanel" data-apanel="clientes">
+          <header class="apanel-head">
+            <div><h2 class="section-title sm">Clientes</h2><p class="muted">Base de contactos activa</p></div>
+            <div class="apanel-tools"><button class="btn btn-primary"><i class="fa-solid fa-plus"></i> Agregar cliente</button></div>
+          </header>
+          <div class="client-grid" id="clientGrid"></div>
+        </div>
+
+        <!-- PAGOS (admin sub) -->
+        <div class="apanel" data-apanel="pagos">
+          <header class="apanel-head">
+            <div><h2 class="section-title sm">Pagos</h2><p class="muted">Histórico de transacciones</p></div>
+          </header>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>ID</th><th>Cliente</th><th>Concepto</th><th>Monto</th><th>Fecha</th><th>Estado</th></tr></thead>
+              <tbody>
+                <tr><td>#PG-2041</td><td>María González</td><td>Listado destacado</td><td>$ 1.200</td><td>06 May 2026</td><td><span class="badge ok">Pagado</span></td></tr>
+                <tr><td>#PG-2040</td><td>Andrés Paredes</td><td>Reserva visita</td><td>$ 50</td><td>06 May 2026</td><td><span class="badge ok">Pagado</span></td></tr>
+                <tr><td>#PG-2039</td><td>Lucía Romero</td><td>Comisión arriendo</td><td>$ 850</td><td>05 May 2026</td><td><span class="badge ok">Pagado</span></td></tr>
+                <tr><td>#PG-2038</td><td>Pedro Salinas</td><td>Listado destacado</td><td>$ 1.200</td><td>04 May 2026</td><td><span class="badge warn">Pendiente</span></td></tr>
+                <tr><td>#PG-2037</td><td>Carla Vinueza</td><td>Reserva visita</td><td>$ 50</td><td>03 May 2026</td><td><span class="badge err">Reembolso</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- NOTIFICACIONES -->
+        <div class="apanel" data-apanel="notif">
+          <header class="apanel-head">
+            <div><h2 class="section-title sm">Notificaciones</h2><p class="muted"><span id="notifUnread">3</span> sin leer</p></div>
+            <div class="apanel-tools"><button class="btn btn-ghost" onclick="App.markAllRead()"><i class="fa-solid fa-check-double"></i> Marcar todas como leídas</button></div>
+          </header>
+          <ul class="notif-list" id="notifList"></ul>
+        </div>
+
+        <!-- CONFIG -->
+        <div class="apanel" data-apanel="config">
+          <header class="apanel-head"><div><h2 class="section-title sm">Configuración</h2><p class="muted">Preferencias del sistema</p></div></header>
+          <div class="config-grid">
+            <div class="card config-card">
+              <h4>Perfil de empresa</h4>
+              <label class="field"><span>Nombre comercial</span><input class="input" value="Premier Estates Ecuador"></label>
+              <label class="field"><span>RUC</span><input class="input" value="1792345678001"></label>
+              <label class="field"><span>Sitio web</span><input class="input" value="premier.ec"></label>
+            </div>
+            <div class="card config-card">
+              <h4>Notificaciones</h4>
+              <label class="switch-row"><span>Email de nuevos leads</span><span class="switch on"></span></label>
+              <label class="switch-row"><span>SMS de visitas confirmadas</span><span class="switch on"></span></label>
+              <label class="switch-row"><span>Resumen semanal</span><span class="switch"></span></label>
+              <label class="switch-row"><span>Alertas de pago</span><span class="switch on"></span></label>
+            </div>
+            <div class="card config-card">
+              <h4>Apariencia</h4>
+              <label class="switch-row"><span>Tema oscuro</span><span class="switch on"></span></label>
+              <label class="switch-row"><span>Animaciones reducidas</span><span class="switch"></span></label>
+              <label class="field"><span>Idioma</span>
+                <select class="select"><option>Español</option><option>English</option></select>
+              </label>
+            </div>
+          </div>
+        </div>
+
+      </section>
+    </div>
+  </section>
+
+  <!-- ===== PROFILE / FAVORITOS ===== -->
+  <section class="view" data-view="profile" data-screen-label="05 Profile">
+    <div class="container">
+      <div class="profile-head">
+        <img src="https://picsum.photos/seed/profile-maria/200/200" class="profile-avatar">
+        <div>
+          <span class="eyebrow gold">Mi cuenta</span>
+          <h1 class="profile-name">María González</h1>
+          <p class="muted">Miembro desde marzo 2024 · maria.gonzalez@gmail.com</p>
+          <div class="profile-stats">
+            <span><strong id="profFavCount">0</strong> favoritos</span>
+            <span><strong>3</strong> visitas agendadas</span>
+            <span><strong>5</strong> consultas</span>
+          </div>
+        </div>
+        <button class="btn btn-outline"><i class="fa-solid fa-pen"></i> Editar perfil</button>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" data-tab="favs"><i class="fa-regular fa-heart"></i> Favoritos</button>
+        <button class="tab" data-tab="visits"><i class="fa-regular fa-calendar"></i> Mis visitas</button>
+        <button class="tab" data-tab="quer"><i class="fa-regular fa-comments"></i> Mis consultas</button>
+      </div>
+
+      <div class="tab-panel active" data-tabpanel="favs">
+        <div class="grid-cards" id="favGrid"></div>
+        <div class="empty-state" id="favEmpty" style="display:none">
+          <i class="fa-regular fa-heart"></i>
+          <h3>Aún no tienes favoritos</h3>
+          <p class="muted">Toca el corazón en cualquier propiedad para guardarla aquí.</p>
+          <button class="btn btn-primary" data-nav="listings">Explorar propiedades</button>
+        </div>
+      </div>
+
+      <div class="tab-panel" data-tabpanel="visits">
+        <ul class="visit-list" id="myVisits"></ul>
+      </div>
+
+      <div class="tab-panel" data-tabpanel="quer">
+        <ul class="query-list">
+          <li class="card q-item"><div><strong>Casa Cumbayá Hills</strong><br><span class="muted">«¿Aceptan crédito hipotecario BIESS?»</span></div><span class="badge warn">Pendiente respuesta</span></li>
+          <li class="card q-item"><div><strong>Depto González Suárez Tower</strong><br><span class="muted">«Información sobre alícuota mensual»</span></div><span class="badge ok">Respondida</span></li>
+          <li class="card q-item"><div><strong>Oficina La Carolina</strong><br><span class="muted">«Disponibilidad para visita el sábado»</span></div><span class="badge ok">Respondida</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PAYMENT ===== -->
+  <section class="view" data-view="payment" data-screen-label="06 Payment">
+    <div class="container">
+      <a class="back-link" data-nav="detail" href="#"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+      <div class="pay-layout">
+        <div class="pay-main">
+          <span class="eyebrow gold">Paso 1 de 2</span>
+          <h1 class="page-title">Pago seguro</h1>
+          <p class="muted">Completa los datos de tu tarjeta para reservar la visita y/o el listado destacado.</p>
+
+          <div class="card pay-card">
+            <div class="cc-preview" id="ccPreview">
+              <div class="cc-brand"><i class="fa-brands fa-cc-visa"></i></div>
+              <div class="cc-chip"></div>
+              <div class="cc-num" id="ccNum">•••• •••• •••• ••••</div>
+              <div class="cc-row">
+                <div><div class="cc-lbl">Titular</div><div id="ccName">NOMBRE APELLIDO</div></div>
+                <div><div class="cc-lbl">Vence</div><div id="ccExp">MM/AA</div></div>
+              </div>
+            </div>
+
+            <form class="pay-form" id="payForm" autocomplete="off" onsubmit="event.preventDefault(); App.completePayment();">
+              <label class="field full"><span>Número de tarjeta</span>
+                <div class="input-icn"><i class="fa-regular fa-credit-card"></i><input class="input" id="payCard" inputmode="numeric" maxlength="19" placeholder="1234 5678 9012 3456"></div>
+              </label>
+              <label class="field"><span>Vencimiento</span>
+                <input class="input" id="payExp" inputmode="numeric" maxlength="5" placeholder="MM/AA">
+              </label>
+              <label class="field"><span>CVV</span>
+                <input class="input" id="payCvv" inputmode="numeric" maxlength="4" placeholder="123">
+              </label>
+              <label class="field full"><span>Nombre en la tarjeta</span>
+                <input class="input" id="payName" placeholder="Como aparece en la tarjeta">
+              </label>
+
+              <div class="pay-actions">
+                <button class="btn btn-primary block" type="submit"><i class="fa-solid fa-lock"></i> Pagar $ 1.250,00</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="trust-grid">
+            <div><i class="fa-solid fa-shield-halved gold"></i><span>Pago cifrado SSL 256-bit</span></div>
+            <div><i class="fa-brands fa-cc-visa gold"></i><span>Visa · Mastercard · Diners</span></div>
+            <div><i class="fa-solid fa-rotate-left gold"></i><span>Reembolso garantizado 7 días</span></div>
+            <div><i class="fa-solid fa-headset gold"></i><span>Soporte 24/7</span></div>
+          </div>
+        </div>
+
+        <aside class="pay-aside">
+          <div class="card summary">
+            <h3>Resumen</h3>
+            <div class="sum-prop">
+              <img src="https://picsum.photos/seed/pay-prop/200/120">
+              <div>
+                <strong>Casa Cumbayá Hills</strong>
+                <p class="muted">Cumbayá · 4 hab · 280 m²</p>
+              </div>
+            </div>
+            <div class="sum-row"><span>Listado destacado (30 días)</span><span>$ 1.200,00</span></div>
+            <div class="sum-row"><span>Servicio</span><span>$ 35,00</span></div>
+            <div class="sum-row"><span>Impuestos</span><span>$ 15,00</span></div>
+            <div class="sum-divider"></div>
+            <div class="sum-row total"><span>Total</span><span class="gold">$ 1.250,00</span></div>
+            <p class="muted sm">Al continuar, aceptas los <a class="link-gold-sm">Términos</a> y la <a class="link-gold-sm">Política de pagos</a>.</p>
+          </div>
+          <div class="aside-help">
+            <i class="fa-solid fa-circle-question gold"></i>
+            <div>
+              <strong>¿Necesitas ayuda?</strong>
+              <p class="muted">Llama al <a class="link-gold-sm">+593 2 600 1234</a> o escribe a soporte.</p>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SIGNATURE ===== -->
+  <section class="view" data-view="signature" data-screen-label="07 Firma">
+    <div class="container">
+      <a class="back-link" data-nav="payment" href="#"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+      <span class="eyebrow gold">Paso 2 de 2</span>
+      <h1 class="page-title">Firma digital del contrato</h1>
+      <p class="muted">Revisa el documento y firma con tu mouse o dedo. Al confirmar, recibirás una copia por correo.</p>
+
+      <div class="sig-layout">
+        <div class="card doc-card">
+          <div class="doc-head">
+            <span class="doc-pill">Contrato N° <strong>PE-CTR-2026-1042</strong></span>
+            <span class="doc-pill">Premier Estates · Cumbayá</span>
+          </div>
+          <div class="doc-body">
+            <h2>CONTRATO DE PROMESA DE COMPRAVENTA</h2>
+            <p>En la ciudad de Quito, a los 8 días del mes de mayo de 2026, comparecen por una parte la empresa <strong>PREMIER ESTATES S.A.</strong>, en calidad de promitente vendedora, y por la otra <strong>María González</strong>, portadora de cédula 1714567890, en calidad de promitente compradora, quienes libre y voluntariamente celebran el presente contrato.</p>
+            <p><strong>Cláusula Primera — Objeto.</strong> La promitente vendedora se obliga a transferir el inmueble ubicado en Cumbayá, Conjunto Privado Premier Hills, casa N° 12, con un área construida de 280 m² y un terreno de 420 m².</p>
+            <p><strong>Cláusula Segunda — Precio.</strong> El precio total acordado es de <strong>USD 285.000,00</strong>, de los cuales se entrega en este acto la suma de USD 28.500,00 a título de arras.</p>
+            <p><strong>Cláusula Tercera — Plazo.</strong> Las partes celebrarán la escritura pública de compraventa en un plazo máximo de 60 días contados desde la suscripción del presente.</p>
+            <p><strong>Cláusula Cuarta — Aceptación.</strong> Las partes declaran haber leído íntegramente este documento y aceptan su contenido sin reserva alguna.</p>
+            <p class="doc-note muted">Documento generado electrónicamente. La firma digital tiene plena validez legal según la Ley de Comercio Electrónico, Firmas Electrónicas y Mensajes de Datos.</p>
+          </div>
+        </div>
+
+        <aside class="sig-aside">
+          <div class="card sig-card" id="sigCard">
+            <h3>Tu firma</h3>
+            <p class="muted sm">Dibuja tu firma dentro del recuadro</p>
+            <div class="sig-pad-wrap">
+              <canvas id="sigPad" width="600" height="240"></canvas>
+              <span class="sig-baseline"></span>
+              <span class="sig-x">×</span>
+            </div>
+            <div class="sig-actions">
+              <button class="btn btn-ghost" id="sigClear"><i class="fa-solid fa-eraser"></i> Limpiar firma</button>
+              <button class="btn btn-primary" id="sigConfirm"><i class="fa-solid fa-signature"></i> Confirmar y firmar</button>
+            </div>
+            <div class="sig-meta muted sm">
+              <i class="fa-solid fa-shield-halved gold"></i> Esta firma será sellada con un timestamp e ID único.
+            </div>
+          </div>
+
+          <div class="card sig-success" id="sigSuccess">
+            <div class="success-icn"><i class="fa-solid fa-circle-check"></i></div>
+            <h3>Documento firmado</h3>
+            <p class="muted">Tu copia ha sido enviada a maria.gonzalez@gmail.com</p>
+            <div class="sig-stamp">
+              <div><span class="muted">ID Documento</span><strong id="sigDocId">—</strong></div>
+              <div><span class="muted">Sellado</span><strong id="sigStamp">—</strong></div>
+              <div><span class="muted">Hash</span><strong id="sigHash">—</strong></div>
+            </div>
+            <button class="btn btn-outline block"><i class="fa-solid fa-download"></i> Descargar PDF</button>
+            <button class="btn btn-primary block" data-nav="profile">Ir a mi cuenta</button>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================================================ FOOTER ============================================================ -->
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="foot-brand">
+      <a class="brand">
+        <span class="brand-mark"><i class="fa-solid fa-gem"></i></span>
+        <span class="brand-name">Premier <em>Estates</em></span>
+      </a>
+      <p class="muted">Encuentra tu propiedad ideal. Más de una década conectando familias con su próximo hogar en Ecuador.</p>
+      <div class="socials">
+        <a><i class="fa-brands fa-instagram"></i></a>
+        <a><i class="fa-brands fa-facebook"></i></a>
+        <a><i class="fa-brands fa-x-twitter"></i></a>
+        <a><i class="fa-brands fa-linkedin"></i></a>
+        <a><i class="fa-brands fa-tiktok"></i></a>
+      </div>
+    </div>
+    <div class="foot-col">
+      <h5>Compañía</h5>
+      <a>Sobre nosotros</a><a>Equipo</a><a>Carreras</a><a>Prensa</a>
+    </div>
+    <div class="foot-col">
+      <h5>Productos</h5>
+      <a>Comprar</a><a>Arrendar</a><a>Vender</a><a>Comerciales</a>
+    </div>
+    <div class="foot-col">
+      <h5>Soporte</h5>
+      <a>Centro de ayuda</a><a>Contáctanos</a><a>Términos</a><a>Privacidad</a>
+    </div>
+    <div class="foot-col foot-newsletter">
+      <h5>Boletín exclusivo</h5>
+      <p class="muted sm">Las mejores propiedades, antes que nadie.</p>
+      <form class="foot-form" onsubmit="event.preventDefault();this.querySelector('input').value='';this.querySelector('span').style.display='inline-flex';">
+        <input class="input" placeholder="tu@correo.com">
+        <button class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i></button>
+        <span class="foot-ok">¡Suscrito!</span>
+      </form>
+    </div>
+  </div>
+  <div class="footer-bottom container">
+    <span>© 2025 Premier Estates · Todos los derechos reservados</span>
+    <span>Hecho con <i class="fa-solid fa-heart gold"></i> en Quito</span>
+  </div>
+</footer>
+
+<!-- ============================================================ MODALS ============================================================ -->
+<div class="modal" id="visitModal">
+  <div class="modal-overlay" data-close></div>
+  <div class="modal-card">
+    <button class="modal-close" data-close><i class="fa-solid fa-xmark"></i></button>
+    <span class="eyebrow gold">Reserva tu visita</span>
+    <h2>Agendar visita</h2>
+    <p class="muted">Selecciona la fecha y hora que mejor se acomode. Carlos confirmará en menos de 1 hora.</p>
+
+    <div class="modal-body">
+      <label class="field"><span>Fecha</span>
+        <input class="input" type="date" id="visitDate">
+      </label>
+      <label class="field"><span>Tu nombre</span>
+        <input class="input" id="visitName" placeholder="Nombre completo">
+      </label>
+      <label class="field"><span>Teléfono / WhatsApp</span>
+        <input class="input" id="visitPhone" placeholder="+593 99 ..." inputmode="tel">
+      </label>
+      <div class="field full">
+        <span>Hora</span>
+        <div class="slot-grid" id="slotGrid">
+          <button type="button" class="slot" data-slot="09:00">09:00</button>
+          <button type="button" class="slot" data-slot="11:00">11:00</button>
+          <button type="button" class="slot" data-slot="15:00">15:00</button>
+          <button type="button" class="slot" data-slot="17:00">17:00</button>
+        </div>
+      </div>
+      <label class="field full"><span>Mensaje (opcional)</span>
+        <textarea class="input" rows="3" placeholder="Cuéntale a Carlos qué te interesa de la propiedad…"></textarea>
+      </label>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" data-close>Cancelar</button>
+      <button class="btn btn-primary" onclick="App.confirmVisit()">Confirmar visita</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="propModal">
+  <div class="modal-overlay" data-close></div>
+  <div class="modal-card lg">
+    <button class="modal-close" data-close><i class="fa-solid fa-xmark"></i></button>
+    <span class="eyebrow gold">Nueva publicación</span>
+    <h2>Agregar propiedad</h2>
+    <div class="modal-body">
+      <label class="field full"><span>Título</span><input class="input" id="np-title" placeholder="Ej. Casa moderna en Cumbayá"></label>
+      <label class="field"><span>Tipo</span>
+        <select class="select" id="np-type"><option>Casa</option><option>Departamento</option><option>Oficina</option><option>Local</option></select>
+      </label>
+      <label class="field"><span>Zona</span>
+        <select class="select" id="np-zone"><option>Cumbayá</option><option>Quito Norte</option><option>Valle de los Chillos</option><option>La Carolina</option><option>González Suárez</option><option>Tumbaco</option></select>
+      </label>
+      <label class="field"><span>Precio (USD)</span><input class="input" type="number" id="np-price" placeholder="285000"></label>
+      <label class="field"><span>Operación</span>
+        <select class="select" id="np-op"><option>Venta</option><option>Arriendo</option></select>
+      </label>
+      <label class="field"><span>Habitaciones</span><input class="input" type="number" id="np-beds" value="3"></label>
+      <label class="field"><span>Baños</span><input class="input" type="number" id="np-baths" value="2"></label>
+      <label class="field"><span>m² construidos</span><input class="input" type="number" id="np-area" value="180"></label>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" data-close>Cancelar</button>
+      <button class="btn btn-primary" onclick="App.saveNewProp()">Publicar propiedad</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><i class="fa-solid fa-circle-check"></i> <span id="toastMsg">Hecho</span></div>
+
+<script src="app.js"></script>
+</body>
+</html>

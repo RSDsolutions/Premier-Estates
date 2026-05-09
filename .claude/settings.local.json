@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(dir /s /b supabase)",
+      "Bash(npm list *)",
+      "Bash(npx kill-port *)",
+      "Bash(npx tsc *)",
+      "Bash(npx vite *)",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\Robin\\\\Desktop\\\\RSD Solutions\\\\Premier State\" -Recurse -Directory)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "mcp__supabase__apply_migration"
+    ]
+  }
+}
