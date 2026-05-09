@@ -77,7 +77,6 @@ export default function ChatWidget() {
         className="chat-fab"
         onClick={() => setOpen(o => !o)}
         title={open ? 'Cerrar chat' : 'Chat con asesor'}
-        style={{ position: 'relative' }}
       >
         <i className={`fa-solid fa-${open ? 'xmark' : 'comments'}`} />
         {!open && unread > 0 && (
