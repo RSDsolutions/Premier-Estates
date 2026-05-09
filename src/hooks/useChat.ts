@@ -52,7 +52,7 @@ export function useChat(propertyId?: string) {
     if (!content.trim()) return
     setSending(true)
 
-    if (!isSupabaseConfigured() || !user) {
+    if (!isSupabaseConfigured() || !user || !propertyId) {
       const mock: MockMessage = {
         id: String(Date.now()),
         sender_id: 'user',
@@ -63,26 +63,29 @@ export function useChat(propertyId?: string) {
         isMock: true,
       }
       setMessages(prev => [...prev, mock])
+      setSending(false)
       setTimeout(() => {
         setMessages(prev => [...prev, {
           id: String(Date.now() + 1),
           sender_id: 'agent',
           receiver_id: 'user',
-          content: 'Gracias por tu mensaje. Carlos te responderá en breve.',
+          content: 'Gracias por tu mensaje. Un asesor te responderá en breve.',
           read: false,
           created_at: new Date().toISOString(),
           isMock: true,
         }])
       }, 1200)
     } else {
-      await supabase.from('messages').insert({
+      const agentId = 'agent-placeholder-id'
+      const { error } = await supabase.from('messages').insert({
         property_id: propertyId,
         sender_id: user.id,
-        receiver_id: 'agent-placeholder-id',
+        receiver_id: agentId,
         content,
       })
+      if (error) console.error('Error sending message', error)
+      setSending(false)
     }
-    setSending(false)
   }, [user, propertyId])
 
   const isOwnMessage = (msg: MockMessage) => {
